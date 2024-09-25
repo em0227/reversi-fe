@@ -40,9 +40,28 @@ body {
   height: 80px;
   border: 2px white;
   border-style: solid none none solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tile:nth-last-child(1) {
   border: 2px white;
   border-style: solid solid none solid;
+}
+
+.black-pawn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px black;
+  background-color: black;
+}
+
+.white-pawn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px white;
+  background-color: white;
 }

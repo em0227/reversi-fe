@@ -5,9 +5,7 @@ import Board from "./components/Board";
 function App() {
   return (
     <div className="App">
-      <body>
-        <Board />
-      </body>
+      <Board />
     </div>
   );
 }
