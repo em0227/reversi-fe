@@ -40,9 +40,10 @@ body {
   height: 80px;
   border: 2px white;
   border-style: solid none none solid;
-  display: flex;
+  perspective: 1000px;
+  /* display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; */
 }
 
 .tile:nth-last-child(1) {
@@ -64,4 +65,35 @@ body {
   border-radius: 50%;
   border: 1px white;
   background-color: white;
+}
+
+.invisible {
+  transform: rotateY(180deg);
+}
+
+.black-pawn,
+.white-pawn {
+  margin: 2px;
+  position: absolute;
+  width: 95%;
+  height: 95%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-pawn-inner {
+  position: relative;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* .flip-pawn-inner:hover {
+  transform: rotateY(180deg);
+} */
+
+.flip-animation {
+  transform: rotateY(180deg);
+  transition-duration: 2s;
 }
