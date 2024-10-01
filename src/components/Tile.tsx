@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { Color } from "../types/board";
 
 type Tile = {
-  color: "BLACK" | "WHITE" | "";
+  color: Color;
   putPawn: (e: React.BaseSyntheticEvent) => void;
-  flipAnimation?: boolean;
+  row: number;
+  col: number;
 };
 
-const Tile = ({ color, putPawn }: Tile) => {
+const Tile = ({ color, putPawn, row, col }: Tile) => {
   return color === "BLACK" ? (
     <>
       <div className={`white-pawn`}></div>
@@ -18,7 +20,16 @@ const Tile = ({ color, putPawn }: Tile) => {
       <div className="white-pawn"></div>
     </>
   ) : (
-    <div onClick={(e) => putPawn(e)}></div>
+    <div
+      className="empty-pawn"
+      id={`empty-tile-${row}-${col}`}
+      data-row={row}
+      data-col={col}
+      onClick={(e) => {
+        console.log("click tile");
+        putPawn(e);
+      }}
+    ></div>
   );
 };
 

@@ -9,8 +9,13 @@ export type Response = {
   id: string;
   state: string;
   winnerId?: string;
-  currentPlyer: string;
-  blackPlayer: string;
-  whitePlayer: string;
-  board: string[][];
+  currentPlayerId: string;
+  blackPlayer: Player;
+  whitePlayer: Player;
+  board: Color[][];
+};
+
+export type Player = {
+  id: string;
+  name: string;
 };
