@@ -2,17 +2,12 @@ import React, { useEffect, useState } from "react";
 import Tile from "./Tile";
 import { Color, BoardTile, Player } from "../types/board";
 import { getGame, updateGame, createGame } from "../utils/game";
-
-// const mockBoard = Array.from(Array(8), () => new Array(8).fill(null));
-// mockBoard[3][3] = "BLACK";
-// mockBoard[3][4] = "WHITE";
-// mockBoard[4][3] = "WHITE";
-// mockBoard[4][4] = "BLACK";
-//first game id b275891d-ac39-4b07-9e43-e0bbef5a28a2
-
-const setUpBoard = (board: Color[][]) => {
-  return board.map((row) => row.map((color) => ({ color: color })));
-};
+import {
+  flip,
+  setUpInitialBoard,
+  setUpBoard,
+  findPlayerName,
+} from "../utils/helper";
 
 const Board = () => {
   const [board, setBoard] = useState<BoardTile[][]>();
@@ -21,7 +16,7 @@ const Board = () => {
   const [currentPlayer, setCurrentPlayer] = useState<string>();
   const [winnerId, setWinnerId] = useState<string>();
   const [currentColor, setCurrentColor] = useState<Color>();
-  const [gameId, setGameId] = useState("946e6de1-92a3-4b7a-8255-f4988a10901d");
+  const [gameId, setGameId] = useState<string>();
   const [gameStatus, setGameStatus] = useState<string>();
 
   useEffect(() => {
@@ -29,7 +24,7 @@ const Board = () => {
       const res = await getGame(gameId);
       console.log(res);
       if (res !== null) {
-        const board = setUpBoard(res.board);
+        const board = setUpInitialBoard(res.board);
         setBoard(board);
         //TODO: probably refactor black and white player to useRef
         setBlackPlayer(res.blackPlayer);
@@ -45,41 +40,14 @@ const Board = () => {
       }
       //TODO: show error model
     };
-    getGameBoard();
+    if (gameId) {
+      getGameBoard();
+    }
   }, [gameId]);
 
   useEffect(() => {
     if (board && gameStatus !== "NEW") {
-      console.log("in board effect");
-      for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board.length; j++) {
-          if (board[i][j].flipAnimation) {
-            document
-              .getElementById(`${i}-${j}`)
-              ?.classList.remove("flip-animation");
-
-            if (board[i][j].color === "BLACK") {
-              document
-                .getElementById(`${i}-${j}`)
-                ?.querySelector(".black-pawn")
-                ?.classList.add("invisible");
-            } else {
-              document
-                .getElementById(`${i}-${j}`)
-                ?.querySelector(".white-pawn")
-                ?.classList.add("invisible");
-            }
-
-            setTimeout(() => {
-              document
-                .getElementById(`${i}-${j}`)
-                ?.classList.add("flip-animation");
-
-              console.log(document.getElementById(`${i}-${j}`));
-            }, 500);
-          }
-        }
-      }
+      flip(board);
     }
   }, [board]);
 
@@ -96,19 +64,7 @@ const Board = () => {
     console.log(res);
     //TODO: show error model
     if (!res) return;
-    const newBoard = res.board.map((row: Color[], i: number) =>
-      row.map((color: Color, j: number) => {
-        if (color !== board![i][j].color) {
-          if (board![i][j].color !== "") {
-            return { color: color, flipAnimation: true };
-          } else {
-            return { color: color, flipAnimation: false };
-          }
-        } else {
-          return { color: color, flipAnimation: false };
-        }
-      })
-    );
+    const newBoard = setUpBoard(res, board);
     setBoard(newBoard);
     setGameStatus(res.state);
     setWinnerId(res.winnerId);
@@ -120,20 +76,22 @@ const Board = () => {
     }
   };
 
-  const findPlayerName = (id?: string) => {
-    if (!id) return null;
-    if (id === blackPlayer?.id) return blackPlayer?.name;
-    if (id === whitePlayer?.id) return whitePlayer?.name;
-  };
-
   const startNewGame = async () => {
-    const newGameId = await createGame(blackPlayer?.id, whitePlayer?.id);
+    const newGameId = await createGame(
+      "73b80336-8c7c-4591-bca7-8020ff86dfbf",
+      "f91bb255-9e38-47bb-8cb5-bbf0eecd17bb"
+    );
     if (newGameId) {
       setGameId(newGameId);
     }
   };
 
-  if (!board) return <></>;
+  if (!board)
+    return (
+      <button className="start-new-game-button" onClick={() => startNewGame()}>
+        Start New Game
+      </button>
+    );
 
   return (
     <div className="game">
@@ -142,9 +100,15 @@ const Board = () => {
         <div className="game-status">
           <div>Game Status: {gameStatus}</div>
           {winnerId ? (
-            <div>Winner Player: {findPlayerName(winnerId)}</div>
+            <div>
+              Winner Player:{" "}
+              {findPlayerName(blackPlayer, whitePlayer, winnerId)}
+            </div>
           ) : (
-            <div>Current Player: {findPlayerName(currentPlayer)}</div>
+            <div>
+              Current Player:{" "}
+              {findPlayerName(blackPlayer, whitePlayer, currentPlayer)}
+            </div>
           )}
         </div>
         {board.map((row, i) => (

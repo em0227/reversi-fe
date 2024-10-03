@@ -13,9 +13,9 @@ export const getGame = async (id?: string): Promise<Response | null> => {
 };
 
 export const updateGame = async (
-  id: string,
-  row: number,
-  col: number,
+  id?: string,
+  row?: number,
+  col?: number,
   color?: Color,
   currentPlayer?: string
 ): Promise<Response | null> => {
