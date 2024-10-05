@@ -1,35 +1,5 @@
 import { BoardTile, Color, Player, Response } from "../types/board";
 
-export const flip = (board: BoardTile[][]) => {
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board.length; j++) {
-      if (board[i][j].flipAnimation) {
-        document
-          .getElementById(`${i}-${j}`)
-          ?.classList.remove("flip-animation");
-
-        if (board[i][j].color === "BLACK") {
-          document
-            .getElementById(`${i}-${j}`)
-            ?.querySelector(".black-pawn")
-            ?.classList.add("invisible");
-        } else {
-          document
-            .getElementById(`${i}-${j}`)
-            ?.querySelector(".white-pawn")
-            ?.classList.add("invisible");
-        }
-
-        setTimeout(() => {
-          document.getElementById(`${i}-${j}`)?.classList.add("flip-animation");
-
-          console.log(document.getElementById(`${i}-${j}`));
-        }, 500);
-      }
-    }
-  }
-};
-
 export const setUpInitialBoard = (board: Color[][]) => {
   return board.map((row) => row.map((color) => ({ color: color })));
 };

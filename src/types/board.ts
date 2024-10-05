@@ -13,6 +13,7 @@ export type Response = {
   blackPlayer: Player;
   whitePlayer: Player;
   board: Color[][];
+  winByHowMany?: number;
 };
 
 export type Player = {

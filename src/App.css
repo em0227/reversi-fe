@@ -94,10 +94,6 @@ body {
   background-color: white;
 }
 
-.invisible {
-  transform: rotateY(180deg);
-}
-
 .black-pawn,
 .white-pawn {
   margin: 2px;
@@ -119,13 +115,12 @@ body {
   height: 100%;
 }
 
-/* .flip-pawn-inner:hover {
-  transform: rotateY(180deg);
-} */
+.flip-out {
+  animation: 2s fadeOut;
+}
 
-.flip-animation {
-  transform: rotateY(180deg);
-  transition-duration: 2s;
+.flip-in {
+  animation: 2s fadeIn;
 }
 
 .game-status {
@@ -139,4 +134,22 @@ body {
 .start-new-game-button {
   margin-top: 20px;
   font-size: large;
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
 }

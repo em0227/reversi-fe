@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Color } from "../types/board";
+import { BoardTile, Color } from "../types/board";
 
 type Tile = {
-  color: Color;
+  tile: BoardTile;
   putPawn: (e: React.BaseSyntheticEvent) => void;
   row: number;
   col: number;
 };
 
-const Tile = ({ color, putPawn, row, col }: Tile) => {
-  return color === "BLACK" ? (
+const Tile = ({ tile, putPawn, row, col }: Tile) => {
+  return tile.color === "BLACK" ? (
     <>
-      <div className={`white-pawn`}></div>
-      <div className={`black-pawn`}></div>
+      <div
+        className={`white-pawn ${tile.flipAnimation ? "flip-out" : ""}`}
+      ></div>
+      <div
+        className={`black-pawn ${tile.flipAnimation ? "flip-in" : ""}`}
+      ></div>
     </>
-  ) : color === "WHITE" ? (
+  ) : tile.color === "WHITE" ? (
     <>
-      <div className={`black-pawn`}></div>
-      <div className="white-pawn"></div>
+      <div
+        className={`black-pawn ${tile.flipAnimation ? "flip-out" : ""}`}
+      ></div>
+      <div
+        className={`white-pawn ${tile.flipAnimation ? "flip-in" : ""}`}
+      ></div>
     </>
   ) : (
     <div

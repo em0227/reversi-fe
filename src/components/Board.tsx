@@ -2,12 +2,7 @@ import React, { useEffect, useState } from "react";
 import Tile from "./Tile";
 import { Color, BoardTile, Player } from "../types/board";
 import { getGame, updateGame, createGame } from "../utils/game";
-import {
-  flip,
-  setUpInitialBoard,
-  setUpBoard,
-  findPlayerName,
-} from "../utils/helper";
+import { setUpInitialBoard, setUpBoard, findPlayerName } from "../utils/helper";
 
 const Board = () => {
   const [board, setBoard] = useState<BoardTile[][]>();
@@ -15,7 +10,7 @@ const Board = () => {
   const [whitePlayer, setWhitePlayer] = useState<Player>();
   const [currentPlayer, setCurrentPlayer] = useState<string>();
   const [winnerId, setWinnerId] = useState<string>();
-  const [currentColor, setCurrentColor] = useState<Color>();
+  const [winByHowMany, setWinByHowMany] = useState<number>(0);
   const [gameId, setGameId] = useState<string>();
   const [gameStatus, setGameStatus] = useState<string>();
 
@@ -30,13 +25,7 @@ const Board = () => {
         setBlackPlayer(res.blackPlayer);
         setWhitePlayer(res.whitePlayer);
         setGameStatus(res.state);
-        setWinnerId(res.winnerId);
         setCurrentPlayer(res.currentPlayerId);
-        if (res.currentPlayerId === res.blackPlayer.id) {
-          setCurrentColor("BLACK");
-        } else {
-          setCurrentColor("WHITE");
-        }
       }
       //TODO: show error model
     };
@@ -45,34 +34,30 @@ const Board = () => {
     }
   }, [gameId]);
 
-  useEffect(() => {
-    if (board && gameStatus !== "NEW") {
-      flip(board);
-    }
-  }, [board]);
+  // useEffect(() => {
+  //   if (board && gameStatus !== "NEW") {
+  //     flip(board);
+  //   }
+  // }, [board]);
 
-  //TODO: refactor some method out
   const putPawn = async (e: React.BaseSyntheticEvent): Promise<void> => {
-    console.log("hit put pawn");
     const res = await updateGame(
       gameId,
       e.currentTarget.dataset.row,
       e.currentTarget.dataset.col,
-      currentColor,
+      currentPlayer === blackPlayer?.id ? "BLACK" : "WHITE",
       currentPlayer
     );
-    console.log(res);
+    console.log("hit put pawn", res);
     //TODO: show error model
     if (!res) return;
     const newBoard = setUpBoard(res, board);
     setBoard(newBoard);
     setGameStatus(res.state);
-    setWinnerId(res.winnerId);
     setCurrentPlayer(res.currentPlayerId);
-    if (res.currentPlayerId === res.blackPlayer.id) {
-      setCurrentColor("BLACK");
-    } else {
-      setCurrentColor("WHITE");
+    if (res.winnerId && res.winByHowMany) {
+      setWinnerId(res.winnerId);
+      setWinByHowMany(res.winByHowMany);
     }
   };
 
@@ -100,10 +85,13 @@ const Board = () => {
         <div className="game-status">
           <div>Game Status: {gameStatus}</div>
           {winnerId ? (
-            <div>
-              Winner Player:{" "}
-              {findPlayerName(blackPlayer, whitePlayer, winnerId)}
-            </div>
+            <>
+              <div>
+                Winner Player:{" "}
+                {findPlayerName(blackPlayer, whitePlayer, winnerId)}
+              </div>
+              <div>Win by: {winByHowMany}</div>
+            </>
           ) : (
             <div>
               Current Player:{" "}
@@ -115,8 +103,8 @@ const Board = () => {
           <div className="board-row" key={i}>
             {row.map((tile, j) => (
               <div className="tile" key={j}>
-                <div className="flip-pawn-inner" id={`${i}-${j}`}>
-                  <Tile color={tile.color} putPawn={putPawn} row={i} col={j} />
+                <div className={`flip-pawn-inner`} id={`${i}-${j}`}>
+                  <Tile tile={tile} putPawn={putPawn} row={i} col={j} />
                 </div>
               </div>
             ))}
