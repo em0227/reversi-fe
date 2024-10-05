@@ -1,3 +1,3 @@
 # Reversi
 
-reservi Typescript + React game.
+reservi Typescript + React game
