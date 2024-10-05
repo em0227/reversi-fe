@@ -34,7 +34,6 @@ const Tile = ({ tile, putPawn, row, col }: Tile) => {
       data-row={row}
       data-col={col}
       onClick={(e) => {
-        console.log("click tile");
         putPawn(e);
       }}
     ></div>
