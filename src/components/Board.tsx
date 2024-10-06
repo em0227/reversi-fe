@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Tile from "./Tile";
-import { Color, BoardTile, Player } from "../types/board";
+import { BoardTile, Player } from "../types/board";
 import { getGame, updateGame, createGame } from "../utils/game";
 import { setUpInitialBoard, setUpBoard, findPlayerName } from "../utils/helper";
 
@@ -11,7 +11,9 @@ const Board = () => {
   const [currentPlayer, setCurrentPlayer] = useState<string>();
   const [winnerId, setWinnerId] = useState<string>();
   const [winByHowMany, setWinByHowMany] = useState<number>(0);
-  const [gameId, setGameId] = useState<string>();
+  const [gameId, setGameId] = useState<string>(
+    "fbbf0ff8-ea15-4bd1-8ad5-2192daa738ec"
+  );
   const [gameStatus, setGameStatus] = useState<string>();
 
   useEffect(() => {
@@ -34,13 +36,8 @@ const Board = () => {
     }
   }, [gameId]);
 
-  // useEffect(() => {
-  //   if (board && gameStatus !== "NEW") {
-  //     flip(board);
-  //   }
-  // }, [board]);
-
   const putPawn = async (e: React.BaseSyntheticEvent): Promise<void> => {
+    //TODO: maybe can reset board here to prevent the flipping bug
     const res = await updateGame(
       gameId,
       e.currentTarget.dataset.row,
@@ -79,9 +76,9 @@ const Board = () => {
     );
 
   return (
-    <div className="game">
+    <div className="game-container">
       <div className="current-player-info"></div>
-      <div className="board">
+      <div className="game">
         <div className="game-status">
           <div>Game Status: {gameStatus}</div>
           {winnerId ? (
@@ -99,17 +96,19 @@ const Board = () => {
             </div>
           )}
         </div>
-        {board.map((row, i) => (
-          <div className="board-row" key={i}>
-            {row.map((tile, j) => (
-              <div className="tile" key={j}>
-                <div className={`flip-pawn-inner`} id={`${i}-${j}`}>
-                  <Tile tile={tile} putPawn={putPawn} row={i} col={j} />
+        <div className="board">
+          {board.map((row, i) => (
+            <div className="board-row" key={i}>
+              {row.map((tile, j) => (
+                <div className="tile" key={j}>
+                  <div className={`flip-pawn-inner`} id={`${i}-${j}`}>
+                    <Tile tile={tile} putPawn={putPawn} row={i} col={j} />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ))}
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
       <div className="players-info">
         <div>Black Player: {blackPlayer?.name}</div>
