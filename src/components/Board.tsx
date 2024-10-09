@@ -11,33 +11,43 @@ const Board = () => {
   const [currentPlayer, setCurrentPlayer] = useState<string>();
   const [winnerId, setWinnerId] = useState<string>();
   const [winByHowMany, setWinByHowMany] = useState<number>(0);
-  const [gameId, setGameId] = useState<string>(
-    "fbbf0ff8-ea15-4bd1-8ad5-2192daa738ec"
-  );
+  const [gameId, setGameId] = useState<string>();
   const [gameStatus, setGameStatus] = useState<string>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const currentGame = localStorage.getItem("currentGame");
+    if (currentGame) {
+      setGameId(currentGame);
+    }
+  }, []);
 
   useEffect(() => {
     const getGameBoard = async () => {
+      setIsLoading(true);
       const res = await getGame(gameId);
       console.log(res);
       if (res !== null) {
-        const board = setUpInitialBoard(res.board);
+        const board = setUpInitialBoard(res.board, res.possibleMoves);
         setBoard(board);
         //TODO: probably refactor black and white player to useRef
         setBlackPlayer(res.blackPlayer);
         setWhitePlayer(res.whitePlayer);
         setGameStatus(res.state);
         setCurrentPlayer(res.currentPlayerId);
+        setIsLoading(false);
       }
       //TODO: show error model
     };
     if (gameId) {
+      console.log("get game");
       getGameBoard();
     }
   }, [gameId]);
 
   const putPawn = async (e: React.BaseSyntheticEvent): Promise<void> => {
     //TODO: maybe can reset board here to prevent the flipping bug
+    setIsLoading(true);
     const res = await updateGame(
       gameId,
       e.currentTarget.dataset.row,
@@ -56,6 +66,7 @@ const Board = () => {
       setWinnerId(res.winnerId);
       setWinByHowMany(res.winByHowMany);
     }
+    setIsLoading(false);
   };
 
   const startNewGame = async () => {
@@ -65,15 +76,22 @@ const Board = () => {
     );
     if (newGameId) {
       setGameId(newGameId);
+      localStorage.setItem("currentGame", newGameId);
     }
   };
 
-  if (!board)
+  if (isLoading) {
+    {
+      console.log("show loading");
+    }
+    return <div>Loading...</div>;
+  } else if (!board) {
     return (
       <button className="start-new-game-button" onClick={() => startNewGame()}>
         Start New Game
       </button>
     );
+  }
 
   return (
     <div className="game-container">
@@ -101,7 +119,12 @@ const Board = () => {
             <div className="board-row" key={i}>
               {row.map((tile, j) => (
                 <div className="tile" key={j}>
-                  <div className={`flip-pawn-inner`} id={`${i}-${j}`}>
+                  <div
+                    className={`flip-pawn-inner ${
+                      tile.possibleMove ? "possible-move" : "non-possible-move"
+                    }`}
+                    id={`${i}-${j}`}
+                  >
                     <Tile tile={tile} putPawn={putPawn} row={i} col={j} />
                   </div>
                 </div>

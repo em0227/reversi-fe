@@ -3,6 +3,7 @@ export type Color = "BLACK" | "WHITE" | "";
 export type BoardTile = {
   color: Color;
   flipAnimation?: boolean;
+  possibleMove: boolean;
 };
 
 export type Response = {
@@ -14,6 +15,7 @@ export type Response = {
   whitePlayer: Player;
   board: Color[][];
   winByHowMany?: number;
+  possibleMoves: number[][];
 };
 
 export type Player = {
