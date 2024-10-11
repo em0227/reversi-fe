@@ -47,7 +47,6 @@ const Board = () => {
 
   const putPawn = async (e: React.BaseSyntheticEvent): Promise<void> => {
     //TODO: maybe can reset board here to prevent the flipping bug
-    setIsLoading(true);
     const res = await updateGame(
       gameId,
       e.currentTarget.dataset.row,
@@ -66,7 +65,6 @@ const Board = () => {
       setWinnerId(res.winnerId);
       setWinByHowMany(res.winByHowMany);
     }
-    setIsLoading(false);
   };
 
   const startNewGame = async () => {

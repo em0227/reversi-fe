@@ -74,6 +74,7 @@ body {
 }
 
 .possible-move {
+  animation: possible-move-fade-in 2s;
   border: 2px yellow solid;
 }
 
@@ -125,11 +126,11 @@ body {
 }
 
 .flip-out {
-  animation: 2s fadeOut;
+  animation: 2s piece-fade-out;
 }
 
 .flip-in {
-  animation: 2s fadeIn;
+  animation: 2s piece-fade-in;
 }
 
 .game-status {
@@ -148,7 +149,7 @@ body {
   padding: 10px;
 }
 
-@keyframes fadeIn {
+@keyframes piece-fade-in {
   0% {
     transform: rotateY(180deg);
   }
@@ -157,11 +158,20 @@ body {
   }
 }
 
-@keyframes fadeOut {
+@keyframes piece-fade-out {
   0% {
     transform: rotateY(0deg);
   }
   100% {
     transform: rotateY(180deg);
+  }
+}
+
+@keyframes possible-move-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
