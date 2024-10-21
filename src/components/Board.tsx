@@ -79,9 +79,6 @@ const Board = () => {
   };
 
   if (isLoading) {
-    {
-      console.log("show loading");
-    }
     return <div>Loading...</div>;
   } else if (!board) {
     return (
