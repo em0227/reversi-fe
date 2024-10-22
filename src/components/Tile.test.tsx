@@ -6,7 +6,11 @@ import { Color } from "../types/board";
 
 describe("Tile", () => {
   it("render black piece on the tile", () => {
-    const mockTile = { color: "BLACK" as Color, possibleMove: false };
+    const mockTile = {
+      color: "BLACK" as Color,
+      possibleMove: false,
+      flipAnimation: false,
+    };
     render(<Tile tile={mockTile} putPawn={jest.fn()} row={1} col={1} />);
     expect(screen.getByTestId("black-pawn").firstChild).toHaveClass(
       "white-pawn"
@@ -17,7 +21,11 @@ describe("Tile", () => {
   });
 
   it("render white piece on the tile", () => {
-    const mockTile = { color: "WHITE" as Color, possibleMove: false };
+    const mockTile = {
+      color: "WHITE" as Color,
+      possibleMove: false,
+      flipAnimation: false,
+    };
     render(<Tile tile={mockTile} putPawn={jest.fn()} row={1} col={1} />);
     expect(screen.getByTestId("white-pawn").firstChild).toHaveClass(
       "black-pawn"
@@ -28,7 +36,11 @@ describe("Tile", () => {
   });
 
   it("render no piece on the tile", () => {
-    const mockTile = { color: "" as Color, possibleMove: false };
+    const mockTile = {
+      color: "" as Color,
+      possibleMove: false,
+      flipAnimation: false,
+    };
     render(<Tile tile={mockTile} putPawn={jest.fn()} row={1} col={1} />);
     expect(screen.getByTestId("empty-tile")).not.toHaveClass("white-pawn");
     expect(screen.getByTestId("empty-tile")).not.toHaveClass("black-pawn");
