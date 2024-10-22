@@ -5,36 +5,51 @@ export const setUpInitialBoard = (
   possibleMoves: number[][]
 ) => {
   const initialBoard = board.map((row) =>
-    row.map((color) => ({ color: color, possibleMove: false }))
+    row.map((color) => ({
+      color: color,
+      possibleMove: false,
+      flipAnimation: false,
+    }))
   );
-  for (const possibleMove of possibleMoves) {
-    const [row, col] = possibleMove;
-    initialBoard[row][col].possibleMove = true;
-  }
+
+  addPossibleMoves(possibleMoves, initialBoard);
+
   return initialBoard;
 };
 
 export const setUpBoard = (res: Response, board?: BoardTile[][]) => {
   if (!board) return undefined;
-  const newBoard = res.board.map((row: Color[], i: number) =>
-    row.map((color: Color, j: number) => {
-      if (color !== board![i][j].color) {
-        if (board![i][j].color !== "") {
-          return { color: color, flipAnimation: true, possibleMove: false };
+  const newBoard = board.map((row: BoardTile[], rowNum: number) =>
+    row.map((tile, colNum: number) => {
+      if (res.board[rowNum][colNum] !== tile.color) {
+        if (board![rowNum][colNum].color !== null) {
+          return {
+            ...tile,
+            color: res.board[rowNum][colNum],
+            flipAnimation: true,
+          };
         } else {
-          return { color: color, flipAnimation: false, possibleMove: false };
+          return {
+            ...tile,
+            color: res.board[rowNum][colNum],
+          };
         }
       } else {
-        return { color: color, flipAnimation: false, possibleMove: false };
+        return tile;
       }
     })
   );
-  for (const possibleMove of res.possibleMoves) {
-    const [row, col] = possibleMove;
-    newBoard[row][col].possibleMove = true;
-  }
+
+  addPossibleMoves(res.possibleMoves, newBoard);
 
   return newBoard;
+};
+
+const addPossibleMoves = (possibleMoves: number[][], board: BoardTile[][]) => {
+  for (const possibleMove of possibleMoves) {
+    const [row, col] = possibleMove;
+    board[row][col].possibleMove = true;
+  }
 };
 
 export const findPlayerName = (

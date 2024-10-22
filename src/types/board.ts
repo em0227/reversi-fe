@@ -1,8 +1,8 @@
-export type Color = "BLACK" | "WHITE" | "";
+export type Color = "BLACK" | "WHITE" | null;
 
 export type BoardTile = {
   color: Color;
-  flipAnimation?: boolean;
+  flipAnimation: boolean;
   possibleMove: boolean;
 };
 
