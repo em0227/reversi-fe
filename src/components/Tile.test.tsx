@@ -4,8 +4,8 @@ import "@testing-library/jest-dom";
 import Tile from "./Tile";
 import { Color } from "../types/board";
 
-describe("Tile", () => {
-  it("render black piece on the tile", () => {
+describe("Tile Component", () => {
+  test("render black piece on the tile", () => {
     const mockTile = {
       color: "BLACK" as Color,
       possibleMove: false,
@@ -20,7 +20,7 @@ describe("Tile", () => {
     );
   });
 
-  it("render white piece on the tile", () => {
+  test("render white piece on the tile", () => {
     const mockTile = {
       color: "WHITE" as Color,
       possibleMove: false,
@@ -35,7 +35,7 @@ describe("Tile", () => {
     );
   });
 
-  it("render no piece on the tile", () => {
+  test("render no piece on the tile", () => {
     const mockTile = {
       color: "" as Color,
       possibleMove: false,

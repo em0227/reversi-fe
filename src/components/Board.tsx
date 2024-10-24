@@ -13,7 +13,7 @@ const Board = () => {
   const [winByHowMany, setWinByHowMany] = useState<number>(0);
   const [gameId, setGameId] = useState<string>();
   const [gameStatus, setGameStatus] = useState<string>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const currentGame = localStorage.getItem("currentGame");
@@ -26,7 +26,7 @@ const Board = () => {
     const getGameBoard = async () => {
       setIsLoading(true);
       const res = await getGame(gameId);
-      console.log(res);
+      // console.log(res);
       if (res !== null) {
         const board = setUpInitialBoard(res.board, res.possibleMoves);
         setBoard(board);
@@ -35,12 +35,15 @@ const Board = () => {
         setWhitePlayer(res.whitePlayer);
         setGameStatus(res.state);
         setCurrentPlayer(res.currentPlayerId);
-        setIsLoading(false);
+        if (res.winnerId && res.winByHowMany) {
+          setWinnerId(res.winnerId);
+          setWinByHowMany(res.winByHowMany);
+        }
       }
+      setIsLoading(false);
       //TODO: show error model
     };
     if (gameId) {
-      console.log("get game");
       getGameBoard();
     }
   }, [gameId]);
@@ -54,7 +57,6 @@ const Board = () => {
       currentPlayer === blackPlayer?.id ? "BLACK" : "WHITE",
       currentPlayer
     );
-    console.log("hit put pawn", res);
     //TODO: show error model
     if (!res) return;
     const newBoard = setUpBoard(res, board);
