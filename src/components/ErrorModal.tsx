@@ -7,7 +7,6 @@ type ErrorModalTypes = {
 
 const ErrorModal: React.FC<ErrorModalTypes> = ({ setShowModal, message }) => {
   const handleClick = () => {
-    console.log("click");
     setShowModal(false);
   };
 

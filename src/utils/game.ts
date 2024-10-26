@@ -1,7 +1,7 @@
 import { Color, Response } from "../types/board";
 
 export const getGame = async (id?: string): Promise<Response | null> => {
-  //   if (!id) return null;
+  if (!id) return null;
   let result = null;
   await fetch(`http://localhost:8080/game/${id}`)
     .then((res) => res.json())

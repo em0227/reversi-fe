@@ -29,7 +29,7 @@ const Board = () => {
     const getGameBoard = async () => {
       setIsLoading(true);
       const res = await getGame(gameId);
-      //test when res is 500
+      setIsLoading(false);
       if (res && res.id !== null) {
         const board = setUpInitialBoard(res.board, res.possibleMoves);
         setBoard(board);
@@ -46,8 +46,8 @@ const Board = () => {
         if (res && res.errorMessage) setError(res.errorMessage);
         setIsErrorModalOpen(true);
       }
-      setIsLoading(false);
     };
+
     if (gameId) {
       getGameBoard();
     }

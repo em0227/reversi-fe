@@ -34,23 +34,23 @@ const mockBoard: BoardTile[][] = [
 describe("setUpBoard", () => {
   const testResult = setUpBoard(mockRes, mockBoard);
 
-  it("if there's no board, set up nothing", () => {
+  test("if there's no board, set up nothing", () => {
     expect(setUpBoard(mockRes)).toEqual(undefined);
   });
 
-  it("if a tile color is different between res.board and local board, the tile's flipAnimation should be true", () => {
+  test("if a tile color is different between res.board and local board, the tile's flipAnimation should be true", () => {
     expect(testResult![0][1].flipAnimation).toEqual(true);
   });
 
-  it("if a tile color is NOT different between res.board and local board, the tile's flipAnimation should be false", () => {
+  test("if a tile color is NOT different between res.board and local board, the tile's flipAnimation should be false", () => {
     expect(testResult![0][0].flipAnimation).toEqual(false);
   });
 
-  it("if a tile color is different but the color is NULL on local board, the tile's flipAnimation should be false", () => {
+  test("if a tile color is different but the color is NULL on local board, the tile's flipAnimation should be false", () => {
     expect(testResult![1][0].flipAnimation).toEqual(false);
   });
 
-  it("if a tile is identified as a possible move from res, the possibleMove should be true", () => {
+  test("if a tile is identified as a possible move from res, the possibleMove should be true", () => {
     expect(testResult![1][1].possibleMove).toEqual(true);
   });
 });

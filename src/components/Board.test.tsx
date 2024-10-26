@@ -1,17 +1,3 @@
-//tests
-
-//player can only click available moves
-
-//once player click an available move, putpawn is called
-
-//show correct win info (game status, win by, winner)
-
-//clicking start new game will call creategame
-
-//error handling
-
-import "@testing-library/jest-dom";
-
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Board from "./Board";
@@ -177,15 +163,17 @@ describe("Board Component", () => {
     expect(localStorage.setItem).toHaveBeenCalledWith("currentGame", newGameId);
   });
 
-  test.skip("handles API errors gracefully", async () => {
-    mockGetGame.mockRejectedValueOnce(new Error("API Error"));
+  test("handles API errors gracefully", async () => {
+    (localStorage.getItem as jest.Mock).mockReturnValue("test-game-id");
+    mockGetGame.mockResolvedValueOnce(null);
 
     render(<Board />);
 
     await waitFor(() => {
-      // Currently there's no error handling UI, but when implemented:
-      // expect(screen.getByText('Error loading game')).toBeInTheDocument();
-      expect(screen.getByText("Loading...")).toBeInTheDocument();
+      expect(screen.getByText(/Something went wrong/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/please refresh the page and try again/)
+      ).toBeInTheDocument();
     });
   });
 
