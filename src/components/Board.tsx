@@ -54,7 +54,7 @@ const Board = () => {
   }, [gameId]);
 
   useEffect(() => {
-    if (error === "can not find this game" && !isErrorModalOpen) {
+    if (error === "Can not find this game" && !isErrorModalOpen) {
       localStorage.removeItem("currentGame");
       setBoard(undefined);
       setError("");
