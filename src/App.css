@@ -149,6 +149,16 @@ body {
   padding: 10px;
 }
 
+.modal {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-content {
+  width: 50%;
+  line-height: 1.5;
+}
+
 @keyframes piece-fade-in {
   0% {
     transform: rotateY(180deg);

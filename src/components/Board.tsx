@@ -3,6 +3,7 @@ import Tile from "./Tile";
 import { BoardTile, Player } from "../types/board";
 import { getGame, updateGame, createGame } from "../utils/game";
 import { setUpInitialBoard, setUpBoard, findPlayerName } from "../utils/helper";
+import ErrorModal from "./ErrorModal";
 
 const Board = () => {
   const [board, setBoard] = useState<BoardTile[][]>();
@@ -14,6 +15,8 @@ const Board = () => {
   const [gameId, setGameId] = useState<string>();
   const [gameStatus, setGameStatus] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(true);
 
   useEffect(() => {
     const currentGame = localStorage.getItem("currentGame");
@@ -26,8 +29,8 @@ const Board = () => {
     const getGameBoard = async () => {
       setIsLoading(true);
       const res = await getGame(gameId);
-      // console.log(res);
-      if (res !== null) {
+      //test when res is 500
+      if (res && res.id !== null) {
         const board = setUpInitialBoard(res.board, res.possibleMoves);
         setBoard(board);
         //TODO: probably refactor black and white player to useRef
@@ -39,14 +42,24 @@ const Board = () => {
           setWinnerId(res.winnerId);
           setWinByHowMany(res.winByHowMany);
         }
+      } else {
+        if (res && res.errorMessage) setError(res.errorMessage);
+        setIsErrorModalOpen(true);
       }
       setIsLoading(false);
-      //TODO: show error model
     };
     if (gameId) {
       getGameBoard();
     }
   }, [gameId]);
+
+  useEffect(() => {
+    if (error === "can not find this game" && !isErrorModalOpen) {
+      localStorage.removeItem("currentGame");
+      setBoard(undefined);
+      setError("");
+    }
+  }, [isErrorModalOpen]);
 
   const putPawn = async (e: React.BaseSyntheticEvent): Promise<void> => {
     //TODO: maybe can reset board here to prevent the flipping bug
@@ -80,9 +93,15 @@ const Board = () => {
     }
   };
 
+  if (isErrorModalOpen) {
+    return <ErrorModal setShowModal={setIsErrorModalOpen} message={error} />;
+  }
+
   if (isLoading) {
     return <div>Loading...</div>;
-  } else if (!board) {
+  }
+
+  if (!board) {
     return (
       <button className="start-new-game-button" onClick={() => startNewGame()}>
         Start New Game

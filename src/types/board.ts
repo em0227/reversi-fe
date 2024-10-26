@@ -16,6 +16,7 @@ export type Response = {
   board: Color[][];
   winByHowMany?: number;
   possibleMoves: number[][];
+  errorMessage?: string;
 };
 
 export type Player = {
