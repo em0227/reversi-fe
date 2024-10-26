@@ -16,7 +16,7 @@ const Board = () => {
   const [gameStatus, setGameStatus] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(true);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   useEffect(() => {
     const currentGame = localStorage.getItem("currentGame");
@@ -70,15 +70,19 @@ const Board = () => {
       currentPlayer === blackPlayer?.id ? "BLACK" : "WHITE",
       currentPlayer
     );
-    //TODO: show error model
-    if (!res) return;
-    const newBoard = setUpBoard(res, board);
-    setBoard(newBoard);
-    setGameStatus(res.state);
-    setCurrentPlayer(res.currentPlayerId);
-    if (res.winnerId && res.winByHowMany) {
-      setWinnerId(res.winnerId);
-      setWinByHowMany(res.winByHowMany);
+
+    if (res && res.id !== null) {
+      const newBoard = setUpBoard(res, board);
+      setBoard(newBoard);
+      setGameStatus(res.state);
+      setCurrentPlayer(res.currentPlayerId);
+      if (res.winnerId && res.winByHowMany) {
+        setWinnerId(res.winnerId);
+        setWinByHowMany(res.winByHowMany);
+      }
+    } else {
+      if (res && res.errorMessage) setError(res.errorMessage);
+      setIsErrorModalOpen(true);
     }
   };
 
