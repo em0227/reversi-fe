@@ -4,7 +4,7 @@ import { setUpBoard } from "../utils/helper";
 const colorValue = {
   BLACK: "BLACK" as Color,
   WHITE: "WHITE" as Color,
-  EMPTY: null as Color,
+  EMPTY: "" as Color,
 };
 
 const mockRes = {
@@ -15,7 +15,7 @@ const mockRes = {
   whitePlayer: { id: "1", name: "Emily" },
   board: [
     [colorValue.BLACK, colorValue.WHITE],
-    [colorValue.WHITE, null],
+    [colorValue.WHITE, colorValue.EMPTY],
   ],
   possibleMoves: [[1, 1]],
 };

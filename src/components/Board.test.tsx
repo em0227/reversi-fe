@@ -11,7 +11,7 @@ jest.mock("../utils/helper");
 describe("Board Component", () => {
   // Mock data
   const mockGame = {
-    board: Array(8).fill(Array(8).fill(null)),
+    board: Array(8).fill(Array(8).fill("")),
     possibleMoves: [],
     blackPlayer: { id: "black-id", name: "Black Player" },
     whitePlayer: { id: "white-id", name: "White Player" },
@@ -22,7 +22,7 @@ describe("Board Component", () => {
 
   const mockBoard = Array(8).fill(
     Array(8).fill({
-      color: null,
+      color: "",
       possibleMove: false,
     })
   );

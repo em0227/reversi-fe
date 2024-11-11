@@ -1,4 +1,4 @@
-export type Color = "BLACK" | "WHITE" | null;
+export type Color = "BLACK" | "WHITE" | "";
 
 export type BoardTile = {
   color: Color;

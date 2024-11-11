@@ -19,7 +19,7 @@ export const updateGame = async (
   color?: Color,
   currentPlayer?: string
 ): Promise<Response | null> => {
-  if (!id || !row || !col || !color || !currentPlayer) return null;
+  if (!id || !row || !col || color === "" || !currentPlayer) return null;
   let result = null;
   await fetch(`http://localhost:8080/game/${id}`, {
     method: "PUT",

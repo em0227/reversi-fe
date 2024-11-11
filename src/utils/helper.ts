@@ -17,25 +17,32 @@ export const setUpInitialBoard = (
   return initialBoard;
 };
 
+//add test bc forgot to reset possiblemove
 export const setUpBoard = (res: Response, board?: BoardTile[][]) => {
   if (!board) return undefined;
   const newBoard = board.map((row: BoardTile[], rowNum: number) =>
     row.map((tile, colNum: number) => {
       if (res.board[rowNum][colNum] !== tile.color) {
-        if (board![rowNum][colNum].color !== null) {
+        if (tile.color !== "") {
           return {
             ...tile,
             color: res.board[rowNum][colNum],
             flipAnimation: true,
+            possibleMove: false,
           };
         } else {
           return {
             ...tile,
             color: res.board[rowNum][colNum],
+            flipAnimation: false,
+            possibleMove: false,
           };
         }
       } else {
-        return tile;
+        return {
+          ...tile,
+          possibleMove: false,
+        };
       }
     })
   );
