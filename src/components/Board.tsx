@@ -5,7 +5,11 @@ import { getGame, updateGame, createGame } from "../utils/game";
 import { setUpInitialBoard, setUpBoard, findPlayerName } from "../utils/helper";
 import ErrorModal from "./ErrorModal";
 
-const Board = () => {
+type User = {
+  user: {};
+};
+
+const Board = ({ user }: User) => {
   const [board, setBoard] = useState<BoardTile[][]>();
   const [blackPlayer, setBlackPlayer] = useState<Player>();
   const [whitePlayer, setWhitePlayer] = useState<Player>();

@@ -20,6 +20,8 @@ describe("Board Component", () => {
     id: "test-game-id",
   };
 
+  const mockUser = {};
+
   const mockBoard = Array(8).fill(
     Array(8).fill({
       color: "",
@@ -65,7 +67,7 @@ describe("Board Component", () => {
   test('renders "Start New Game" button when no board is present', async () => {
     mockGetGame.mockResolvedValueOnce(null);
 
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       expect(screen.getByText("Start New Game")).toBeInTheDocument();
@@ -75,7 +77,7 @@ describe("Board Component", () => {
   test("loads existing game from localStorage", async () => {
     (localStorage.getItem as jest.Mock).mockReturnValue("test-game-id");
 
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       expect(getGame).toHaveBeenCalledWith("test-game-id");
@@ -87,7 +89,7 @@ describe("Board Component", () => {
     mockSetUpInitialBoard.mockReturnValue(mockBoard);
     mockGetGame.mockResolvedValue(mockGame);
     mockSetUpBoard.mockReturnValue(mockBoard);
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       expect(screen.getByText("Game Status: IN_PROGRESS")).toBeInTheDocument();
@@ -108,7 +110,7 @@ describe("Board Component", () => {
     mockGetGame.mockResolvedValueOnce(gameWithWinner);
     mockfindPlayerName.mockReturnValue("Black Player");
 
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       expect(
@@ -129,7 +131,7 @@ describe("Board Component", () => {
 
     mockGetGame.mockResolvedValueOnce(getGame);
 
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       const tiles = screen.getAllByTestId("empty-tile"); // You'll need to add data-testid="tile" to your Tile component
@@ -149,7 +151,7 @@ describe("Board Component", () => {
     const newGameId = "new-game-id";
     mockCreateGame.mockResolvedValueOnce(newGameId);
 
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       const button = screen.getByText("Start New Game");
@@ -167,7 +169,7 @@ describe("Board Component", () => {
     (localStorage.getItem as jest.Mock).mockReturnValue("test-game-id");
     mockGetGame.mockResolvedValueOnce(null);
 
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       expect(screen.getByText(/Something went wrong/)).toBeInTheDocument();
@@ -183,7 +185,7 @@ describe("Board Component", () => {
     mockSetUpInitialBoard.mockReturnValue(mockBoard);
     mockGetGame.mockResolvedValue(mockGame);
     mockSetUpBoard.mockReturnValue(mockBoard);
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       const tiles = screen.getAllByTestId("empty-tile");
@@ -196,7 +198,7 @@ describe("Board Component", () => {
     mockSetUpInitialBoard.mockReturnValue(mockBoard);
     mockGetGame.mockResolvedValue(mockGame);
     mockSetUpBoard.mockReturnValue(mockBoard);
-    render(<Board />);
+    render(<Board user={mockUser} />);
 
     await waitFor(() => {
       expect(
