@@ -16,7 +16,9 @@ const Board = ({ user }: User) => {
   const [currentPlayer, setCurrentPlayer] = useState<string>();
   const [winnerId, setWinnerId] = useState<string>();
   const [winByHowMany, setWinByHowMany] = useState<number>(0);
-  const [gameId, setGameId] = useState<string>();
+  const [gameId, setGameId] = useState<string>(
+    "39ab7deb-db8c-4197-ba80-d131594dc5be"
+  );
   const [gameStatus, setGameStatus] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
@@ -33,6 +35,7 @@ const Board = ({ user }: User) => {
     const getGameBoard = async () => {
       setIsLoading(true);
       const res = await getGame(gameId);
+      console.log("res", res);
       setIsLoading(false);
       if (res && res.id !== null) {
         const board = setUpInitialBoard(res.board, res.possibleMoves);
@@ -53,6 +56,7 @@ const Board = ({ user }: User) => {
     };
 
     if (gameId) {
+      console.log("has game id");
       getGameBoard();
     }
   }, [gameId]);
