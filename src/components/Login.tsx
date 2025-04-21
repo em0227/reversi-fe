@@ -1,44 +1,57 @@
-import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
-const redirectUri = "http://localhost:8080/oauth2/redirect";
-const apiBaseUrl = "http://localhost:8080";
-// const GOOGLE_AUTH_URL =
-//   apiBaseUrl + "/oauth2/authorize/google?redirect_uri=" + redirectUri;
-// const GOOGLE_AUTH_URL = "http://localhost:8080/auth/redirect/google";
-const GOOGLE_AUTH_URL = "http://localhost:8080/oauth2/authorization/google";
+function Login() {
+  const navigate = useNavigate();
 
-const Login = ({
-  authenticated,
-  setIsAuthenticated,
-}: {
-  authenticated: boolean;
-  setIsAuthenticated: (authenticated: boolean) => void;
-}) => {
-  if (authenticated) {
-    return <Navigate to={"/"} />;
-  } else {
-    return <SampleLogin setIsAuthenticated={setIsAuthenticated} />;
-  }
-};
+  const handleSuccess = async (credentialResponse: any) => {
+    // Decode the JWT token to get user info
+    const decoded: any = jwtDecode(credentialResponse.credential);
+    console.log(decoded);
+    // Send the user data to your backend
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/auth/google-signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email: decoded.email,
+            name: decoded.name,
+            picture: decoded.picture,
+            sub: decoded.sub, // Google's user ID
+            credential: credentialResponse.credential, // Send the JWT token for verification
+          }),
+        }
+      );
 
-const SampleLogin = ({
-  setIsAuthenticated,
-}: {
-  setIsAuthenticated: (authenticated: boolean) => void;
-}) => {
+      if (response.ok) {
+        // Handle successful login
+        const userData = await response.json();
+        console.log(userData);
+        // Redirect to board page
+        navigate("/board");
+      } else {
+        console.error("Login failed");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
+
   return (
-    <div className="social-login">
-      <a
-        className="btn btn-block social-btn google"
-        href={GOOGLE_AUTH_URL}
-        onClick={() => setIsAuthenticated(true)}
-      >
-        {/* <img src={googleLogo} alt="Google" />  */}
-        Log in with Google
-      </a>
+    <div className="login-container">
+      <h2>Welcome to Reversi</h2>
+      <GoogleLogin
+        onSuccess={handleSuccess}
+        onError={() => console.log("Login Failed")}
+      />
     </div>
   );
-};
+}
 
 export default Login;
